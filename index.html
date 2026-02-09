@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Especial</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Notificación inicial -->
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <div class="notification-icon">✉️</div>
+            <div class="notification-text">
+                <p class="notification-title">Stefania tienes un nuevo mensaje</p>
+                <p class="notification-subtitle">Revisa tu carta</p>
+            </div>
+            <div class="notification-close">&times;</div>
+        </div>
+    </div>
+
+    <!-- Carta animada -->
+    <div class="letter-container">
+        <div class="letter-image" id="letterContainer">
+            <div class="animated-mail">
+                <div class="back-fold"></div>
+                <div class="letter">
+                    <div class="letter-border"></div>
+                    <div class="letter-title"></div>
+                    <div class="letter-context"></div>
+                    <div class="letter-stamp">
+                        <div class="letter-stamp-inner"></div>
+                    </div>
+                </div>
+                <div class="top-fold"></div>
+                <div class="body"></div>
+                <div class="left-fold"></div>
+            </div>
+            <div class="shadow"></div>
+        </div>
+        <div class="instruction-text">
+        </div>
+    </div>
+
+    <!-- Modal de la carta abierta -->
+    <div id="letterModal" class="modal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <div class="letter-paper" id="letterPaper">
+                <div class="letter-header">
+                    <h1 id="letterTitle">Carta Para el Amor de Mi Vida</h1>
+                    <div class="letter-date" id="letterDate">15 de Febrero, 2026</div>
+                </div>
+                <div class="letter-body" id="letterBody">
+                    <p class="greeting" id="greeting"></p>
+                    <p id="paragraph1"></p>
+                    <p id="paragraph2"></p>
+                    <p id="paragraph3"></p>
+                    <p id="paragraph4"></p>
+                    <p class="signature" id="signature1"></p>
+                    <p class="signature-name" id="signature2"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje de amor final -->
+    <div id="loveMessage" class="love-message">
+        <p id="loveText"></p>
+    </div>
+
+    <script>
+        // Textos para el efecto typing
+        const letterTexts = {
+            greeting: "Querida Stefania,",
+            paragraph1: "Espero que al resivir esta carta te encuentre en perfecta salud y con el corazón lleno de alegría. Me complace enormemente poder dirigirme a ti a través de estas líneas. Te escribo estas líneas con el corazón en la mano, sabiendo que tal vez no sea lo más conveniente, pero en un día como hoy, donde se habla tanto del amor, no pude evitar que mis pensamientos viajaran irremediablemente hacia ti.",
+
+            paragraph2: "Te extraño de una manera que no tiene comparación. Cada canción que escucho parece hablar de nosotros, de lo que vivimos, de lo que perdimos. Cada pequeño detalle del día me recuerda a tu risa, a tu forma de ver el mundo, a la paz que sentía a tu lado. Pasar estas fechas, especialmente San Valentín, sin ti, ha sido una de las cosas más tristes que he experimentado. No por el día en sí, sino por la ausencia de tu presencia. Lo confieso: lo único que quiero en este momento es verte sonreír, saber que estás bien, y, en lo más profundo de mí, deseo con todas mis fuerzas tener la oportunidad de volver a estar a tu lado",
+
+            paragraph3: "He reflexionado mucho sobre nuestro tiempo juntos, sobre mis errores y sobre lo maravilloso que era compartir la vida contigo. Eres, sin lugar a dudas, el amor de mi vida, y esa certeza no ha hecho más que crecer con la distancia. No escribo esto para generarte una obligación o para que te sientas presionada. Solo quería que lo supieras, con total honestidad. Que supieras que mi cariño por ti es profundo y verdadero, y que la puerta de mi vida y mi corazón sigue abierta para ti, si algún día sientes que podríamos intentarlo de nuevo, con más sabiduría y más amor que nunca.",
+
+            paragraph4: "Sea cual sea tu respuesta o tu silencio, solo te deseo felicidad. Porque tu felicidad, incluso si no está conmigo, siempre será importante para mí.",
+
+           
+            signature1: "Con cariño: Jonatan Crister",
+            signature2: "PS: Aun tengo otra sorpresa, dime si estas lista para ella"
+        };
+
+        const loveMessageText = "Te amo mucho";
+
+        // Función para efecto typing
+        function typeText(element, text, speed = 30) {
+            return new Promise((resolve) => {
+                element.textContent = '';
+                let i = 0;
+                const timer = setInterval(() => {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, speed);
+            });
+        }
+
+        // Función para mostrar la carta con typing
+        async function showLetterWithTyping() {
+            const modal = document.getElementById('letterModal');
+            const letterPaper = document.getElementById('letterPaper');
+            
+            // Mostrar modal con animación
+            modal.style.display = 'block';
+            modal.classList.add('modal-show');
+            
+            // Animación de entrada del papel
+            setTimeout(() => {
+                letterPaper.classList.add('letter-entrance');
+            }, 100);
+
+            // Esperar a que termine la animación de entrada
+            setTimeout(async () => {
+                // Typing secuencial de cada párrafo
+                await typeText(document.getElementById('greeting'), letterTexts.greeting, 40);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await typeText(document.getElementById('paragraph1'), letterTexts.paragraph1, 25);
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                await typeText(document.getElementById('paragraph2'), letterTexts.paragraph2, 25);
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                await typeText(document.getElementById('paragraph3'), letterTexts.paragraph3, 25);
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                await typeText(document.getElementById('paragraph4'), letterTexts.paragraph4, 25);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await typeText(document.getElementById('signature1'), letterTexts.signature1, 35);
+                await new Promise(resolve => setTimeout(resolve, 200));
+                
+                await typeText(document.getElementById('signature2'), letterTexts.signature2, 35);
+            }, 800);
+        }
+
+        // Función para cerrar la carta
+        function closeLetter() {
+            const modal = document.getElementById('letterModal');
+            const letterPaper = document.getElementById('letterPaper');
+            const loveMessage = document.getElementById('loveMessage');
+            
+            // Animación de salida
+            letterPaper.classList.add('letter-exit');
+            
+            setTimeout(() => {
+                modal.classList.remove('modal-show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    letterPaper.classList.remove('letter-entrance', 'letter-exit');
+                    
+                    // Limpiar textos
+                    Object.keys(letterTexts).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) element.textContent = '';
+                    });
+                    
+                    // Mostrar mensaje de amor
+                    loveMessage.classList.add('show');
+                    typeText(document.getElementById('loveText'), loveMessageText, 100);
+                    
+                    // Ocultar mensaje después de 4 segundos
+                    setTimeout(() => {
+                        loveMessage.classList.remove('show');
+                    }, 4000);
+                }, 300);
+            }, 500);
+        }
+
+        // Mostrar notificación al cargar la página
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('notification').classList.add('show');
+                
+                // Auto-ocultar notificación después de 5 segundos
+                setTimeout(() => {
+                    document.getElementById('notification').classList.remove('show');
+                }, 5000);
+            }, 1000);
+        });
+
+        // La notificación ahora solo se cierra, no abre la carta
+        document.querySelector('.notification-close').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('notification').classList.remove('show');
+        });
+
+        // Solo la carta abre el modal
+        document.getElementById('letterContainer').addEventListener('click', function() {
+            document.getElementById('notification').classList.remove('show');
+            showLetterWithTyping();
+        });
+
+        // Cerrar modal
+        document.getElementById('closeModal').addEventListener('click', function() {
+            closeLetter();
+        });
+
+        // Cerrar modal haciendo clic en el overlay
+        document.getElementById('modalOverlay').addEventListener('click', function() {
+            closeLetter();
+        });
+    </script>
+</body>
+</html>
